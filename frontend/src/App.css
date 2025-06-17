@@ -1,0 +1,754 @@
+
+
+/* Modern Neon & Glassmorphic Todo App Styles */
+
+/* Reset and base styles */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Modern & Slightly Darker Base Colors for Contrast with Neon */
+  --primary: #8a2be2; /* Blue Violet - a vibrant, deep purple */
+  --primary-dark: #6a0dad; /* Darker purple */
+  --accent: #00ffff; /* Cyan - for a neon glow */
+  --accent-light: #00ffee; /* Slightly lighter cyan for subtle variations */
+  --success: #39ff14; /* Neon green */
+  --danger: #ff073a; /* Neon red */
+
+  /* Backgrounds & Surfaces */
+  --bg-gradient-start: #1a1a2e; /* Deep dark blue for background */
+  --bg-gradient-end: #0f0f1c;   /* Even darker blue */
+  --surface-glass: rgba(255, 255, 255, 0.08); /* Very subtle white for glassmorphism */
+  --surface-glass-light: rgba(255, 255, 255, 0.15); /* Slightly lighter for hover/active glass */
+  --surface-glass-dark: rgba(0, 0, 0, 0.1); /* Darker glass for inset/done states */
+
+  /* Shadows for Neumorphism (Inner) and Neon Glow */
+  --shadow-inset-dark: inset 3px 3px 6px rgba(0, 0, 0, 0.4), inset -3px -3px 6px rgba(40, 40, 50, 0.6);
+  --shadow-neon-glow-primary: 0 0 15px var(--primary), 0 0 30px var(--primary-dark);
+  --shadow-neon-glow-accent: 0 0 10px var(--accent-light), 0 0 20px var(--accent);
+  --shadow-neon-glow-success: 0 0 10px var(--success), 0 0 20px var(--success);
+  --shadow-neon-glow-danger: 0 0 10px var(--danger), 0 0 20px var(--danger);
+  --shadow-soft-dark: 0 0 15px rgba(0, 0, 0, 0.4); /* General soft shadow for elements on dark glass */
+
+
+  /* Borders & Radii */
+  --border-neon: 1px solid rgba(0, 255, 255, 0.3); /* Subtle neon border for glass */
+  --border-neon-active: 1px solid var(--accent); /* More prominent neon border on hover */
+  --radius: 20px; /* Slightly more rounded */
+  --radius-small: 12px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-ease: 0.4s cubic-bezier(.25, .8, .25, 1); /* Smoother, more 'ease-in-out' feel */
+
+  /* Fonts & Text Colors */
+  --font-main: 'Poppins', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif; /* Modern font */
+  --text-light: #e0e0e0; /* Light text for dark background */
+  --text-medium: #a0a0a0; /* Medium grey */
+  --text-dark: #303030; /* Dark text for specific elements if needed, though less common here */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  min-height: 100vh;
+  color: var(--text-light); /* Default text color */
+  line-height: 1.6;
+  transition: background var(--transition-ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden; /* Prevent body scroll if content overflows */
+  position: relative; /* For background effects */
+}
+
+/* Optional: Subtle background particles/blobs for extra flair */
+body::before, body::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(100px); /* Heavy blur for soft blobs */
+  z-index: -1;
+}
+
+body::before {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--primary), transparent);
+  top: -50px;
+  left: -50px;
+  animation: blob-move 15s infinite alternate ease-in-out;
+}
+
+body::after {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--accent), transparent);
+  bottom: -100px;
+  right: -100px;
+  animation: blob-move 20s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes blob-move {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, -30px) scale(1.05); }
+  50% { transform: translate(0, 20px) scale(0.95); }
+  75% { transform: translate(-30px, -10px) scale(1.1); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.App {
+  width: 100%;
+  max-width: 550px; /* Slightly wider for more presence */
+  background: transparent; /* Wrapper itself is transparent */
+  padding: 2.5rem; /* Increased padding */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+  z-index: 1; /* Ensure it's above background blobs */
+}
+
+/* NEON & GLASSMORPHIC WRAPPER */
+.todo-wrapper {
+  background: var(--surface-glass);
+  border-radius: var(--radius);
+  border: var(--border-neon); /* Subtle neon border */
+  backdrop-filter: blur(25px) saturate(180%); /* Stronger blur for glassmorphism */
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.15), /* Subtle accent glow */
+              var(--shadow-neon-glow-primary); /* Primary color glow */
+  padding: 2rem;
+  transition: all var(--transition-ease);
+  position: relative;
+  overflow: hidden; /* Important for nested elements */
+  animation: fadeInFromBlur 1.2s forwards; /* A new animation for stylish entry */
+}
+
+@keyframes fadeInFromBlur {
+  0% { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* Optional: Inner glow for the wrapper */
+.todo-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, var(--primary), var(--accent)) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.15; /* Subtle inner border glow */
+  transition: opacity var(--transition-ease);
+  pointer-events: none; /* Don't interfere with clicks */
+}
+
+.todo-wrapper:hover {
+  border: var(--border-neon-active);
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.25), /* Stronger accent glow on hover */
+              0 0 50px var(--primary); /* Stronger primary glow on hover */
+  transform: translateY(-5px); /* Slight lift */
+}
+
+h1 {
+  text-align: center;
+  font-size: 3rem; /* Larger, more impactful heading */
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2rem; /* More space below title */
+  letter-spacing: -2px;
+  text-shadow: 0 0 5px rgba(138, 43, 226, 0.5), 0 0 10px rgba(0, 255, 255, 0.4); /* Subtle text neon glow */
+}
+
+.input-container {
+  display: flex;
+  gap: 1rem;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 1rem 1.4rem; /* More padding */
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--surface-glass-dark); /* Using darker glass for inputs */
+  box-shadow: var(--shadow-inset-dark); /* Dark neumorphic inset */
+  font-size: 1.1rem; /* Larger font */
+  transition: all var(--transition-ease);
+  color: var(--text-light); /* Light text color */
+  appearance: none;
+}
+
+input[type="text"]::placeholder {
+  color: var(--text-medium);
+  opacity: 0.7;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  background: var(--surface-glass); /* Slightly lighter on focus */
+  box-shadow: var(--shadow-inset-dark), 0 0 0 2px var(--accent); /* Neon outline on focus */
+}
+
+button {
+  padding: 1rem 2rem; /* More generous padding */
+  border-radius: var(--radius-full);
+  border: none;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark)); /* Deeper primary color */
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem; /* Larger font */
+  cursor: pointer;
+  box-shadow: var(--shadow-neon-glow-primary); /* Primary neon glow */
+  transition: all var(--transition-ease);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase; /* A bit more style */
+  letter-spacing: 0.5px;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--primary)); /* Accent on hover */
+  opacity: 0;
+  transition: opacity var(--transition-ease);
+  z-index: 1;
+}
+
+button span {
+  position: relative;
+  z-index: 2;
+}
+
+button:hover, button:focus-visible {
+  background: linear-gradient(90deg, var(--accent), var(--accent-light)); /* Accent gradient on hover */
+  transform: translateY(-4px) scale(1.05); /* More pronounced lift */
+  box-shadow: var(--shadow-neon-glow-accent); /* Accent neon glow on hover */
+}
+
+button:disabled {
+  opacity: 0.3; /* More subtle disabled state */
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none; /* No lift */
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem; /* Increased gap */
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  background: var(--surface-glass); /* Subtle glass background for items */
+  border-radius: var(--radius-small);
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+  box-shadow: var(--shadow-soft-dark); /* Soft shadow for depth */
+  padding: 1.2rem 1.8rem; /* Increased horizontal padding for wider look */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all var(--transition-ease);
+  position: relative;
+}
+
+li:hover {
+  background: var(--surface-glass-light); /* Slightly lighter on hover */
+  border: 1px solid rgba(0, 255, 255, 0.15); /* Subtle neon border on hover */
+  transform: translateX(5px); /* Slide slightly on hover */
+}
+
+.task-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.task-text {
+  font-size: 1.15rem; /* Slightly larger text */
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all var(--transition-ease);
+  user-select: none;
+}
+
+li.done .task-text {
+  text-decoration: line-through;
+  color: var(--text-medium);
+  opacity: 0.8;
+}
+
+li.done {
+  background: var(--surface-glass-dark); /* Darker glass for done tasks */
+  border: 1px solid rgba(0, 255, 255, 0.05);
+  box-shadow: var(--shadow-inset-dark); /* Inset for done */
+}
+
+.todo-actions {
+  display: flex;
+  gap: 0.9rem; /* Increased gap for better spacing between action buttons */
+}
+
+.todo-actions button {
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+  border-radius: var(--radius-full);
+  background: var(--surface-glass-dark); /* Glassy button background */
+  color: var(--accent); /* Accent color for action buttons */
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.2); /* Subtle accent glow */
+  font-weight: 600;
+  transition: all var(--transition-ease);
+  text-transform: capitalize; /* More natural for actions */
+  letter-spacing: normal;
+}
+
+.todo-actions button:hover {
+  background: var(--accent);
+  color: #000; /* Black text on neon background for contrast */
+  border-color: var(--accent-light);
+  box-shadow: var(--shadow-neon-glow-accent);
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  border-color: var(--danger);
+  color: var(--danger);
+  box-shadow: 0 0 8px rgba(255, 7, 58, 0.2);
+}
+
+.delete-btn:hover {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: var(--shadow-neon-glow-danger);
+}
+
+.toggle-btn {
+  border-color: var(--success);
+  color: var(--success);
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.2);
+}
+
+.toggle-btn:hover {
+  background: var(--success);
+  color: #000;
+  box-shadow: var(--shadow-neon-glow-success);
+}
+
+.task-meta {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--text-medium);
+  display: flex;
+  gap: 0.8rem;
+}
+
+.error-message {
+  background: linear-gradient(90deg, var(--danger), #ff8c00); /* Red to Orange for error */
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-small);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-neon-glow-danger); /* Neon glow for error */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: shake 0.3s ease-in-out;
+  border: 1px solid var(--danger);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.close-error {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5rem; /* Larger close icon */
+  cursor: pointer;
+  margin-left: 1rem;
+  transition: color var(--transition-ease);
+}
+
+.close-error:hover {
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); /* Subtle glow on close */
+}
+
+.char-counter {
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--text-medium);
+  margin-bottom: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.char-counter .warning {
+  color: #ff8c00; /* Orange for warning */
+  font-weight: bold;
+  animation: pulse 1s infinite alternate;
+  text-shadow: 0 0 5px #ff8c00; /* Warning glow */
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.98); }
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--text-medium);
+}
+
+.spinner {
+  width: 50px; /* Larger spinner */
+  height: 50px;
+  border: 6px solid rgba(255, 255, 255, 0.1); /* Glassy spinner base */
+  border-top: 6px solid var(--primary); /* Neon primary color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 0 15px rgba(138, 43, 226, 0.5); /* Primary glow for spinner */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: var(--surface-glass-dark); /* Darker glass background */
+  border-radius: var(--radius);
+  color: var(--text-medium);
+  font-size: 1.2rem; /* Larger text */
+  margin: 1.5rem 0;
+  box-shadow: var(--shadow-soft-dark); /* Soft shadow */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.empty-state::before {
+  content: '🌟'; /* More fitting emoji */
+  display: block;
+  font-size: 3.5rem; /* Even larger emoji */
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite; /* Slightly longer animation */
+  text-shadow: 0 0 10px rgba(255, 255, 0, 0.7); /* Golden glow for star */
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); } /* More pronounced float */
+}
+
+/* Code specific styles for inline code elements */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  background-color: rgba(0, 255, 255, 0.05); /* Very light neon accent background */
+  color: var(--accent); /* Neon accent color for code text */
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.1); /* Subtle neon glow */
+}
+
+/* Task Counter Display */
+.task-counter-display {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-light);
+  background: var(--surface-glass-dark);
+  border-radius: var(--radius-small);
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-soft-dark);
+}
+
+.task-counter-display span strong {
+  font-size: 1.2rem;
+  color: var(--accent);
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+/* Task Sections (Pending/Completed) */
+.task-section {
+  margin-top: 1.5rem;
+}
+
+.task-section h3 {
+  font-size: 1.3rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+/* Main Action Buttons Container */
+.main-actions {
+  display: flex;
+  justify-content: center; /* Center buttons */
+  gap: 1.2rem; /* Gap between action buttons */
+  margin-top: 2rem;
+}
+
+.main-actions button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: var(--radius-full);
+  background: var(--surface-glass-dark);
+  color: var(--text-light);
+  border: 1.5px solid var(--text-medium);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+.main-actions button:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary-dark);
+  box-shadow: var(--shadow-neon-glow-primary);
+  transform: translateY(-2px);
+}
+
+.main-actions .clear-completed-btn {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.main-actions .clear-completed-btn:hover {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: var(--shadow-neon-glow-danger);
+}
+
+/* Statistics Container */
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 2rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--surface-glass-dark);
+  border-radius: var(--radius-small);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-soft-dark);
+}
+
+.stats-container .stat-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: var(--text-light);
+}
+
+.stats-container .stat-item span:last-child {
+  font-weight: 600;
+  color: var(--accent);
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+/* Custom Confirmation Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure it's on top */
+  backdrop-filter: blur(5px); /* Subtle blur for the background */
+}
+
+.modal-content {
+  background: var(--surface-glass-light); /* Lighter glass for modal content */
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  color: var(--text-light);
+  border: var(--border-neon-active); /* Prominent neon border */
+  box-shadow: var(--shadow-neon-glow-accent); /* Accent glow for modal */
+  animation: modal-fade-in 0.3s ease-out;
+}
+
+.modal-content p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-ease);
+  border: none;
+  font-size: 1rem;
+}
+
+.modal-actions .confirm-yes-btn {
+  background: var(--success);
+  color: #000;
+  box-shadow: var(--shadow-neon-glow-success);
+}
+
+.modal-actions .confirm-yes-btn:hover {
+  background: var(--success);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--success);
+}
+
+.modal-actions .confirm-no-btn {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: var(--shadow-neon-glow-danger);
+}
+
+.modal-actions .confirm-no-btn:hover {
+  background: var(--danger);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--danger);
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; transform: translateY(-20px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .App {
+    padding: 1rem; /* Reduced padding for very small screens */
+    max-width: 100vw;
+  }
+  .todo-wrapper {
+    padding: 1.2rem; /* Reduced padding for wrapper */
+  }
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  .input-container {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  button, input[type="text"] {
+    font-size: 0.9rem;
+    padding: 0.8rem 1rem;
+  }
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.9rem 1rem; /* Responsive padding for list items */
+  }
+  .task-text {
+    font-size: 1rem;
+  }
+  .todo-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 0.5rem; /* Reduced gap for small screens */
+  }
+  .todo-actions button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  .task-counter-display, .stats-container {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  .task-counter-display span strong {
+    font-size: 1.1rem;
+  }
+  .task-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+  .main-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .main-actions button {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+  .modal-content {
+    padding: 1.5rem;
+  }
+  .modal-content p {
+    font-size: 1rem;
+  }
+  .modal-actions button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Accessibility */
+button:focus-visible,
+input:focus-visible,
+.task-text:focus-visible {
+  outline: 3px solid var(--accent); /* Neon outline for focus */
+  outline-offset: 4px; /* Increased offset */
+  border-radius: var(--radius-small);
+  box-shadow: 0 0 10px var(--accent); /* Add a glow to outline */
+}

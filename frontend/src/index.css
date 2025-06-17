@@ -1,0 +1,69 @@
+body {
+  margin: 0;
+  /* Using the modern font defined in :root for consistency with the overall design */
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Ensure the background and text color are set in the main body style block
+     to integrate with the neon/glassmorphic theme */
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  min-height: 100vh;
+  color: var(--text-light); /* Default text color for the app */
+  line-height: 1.6;
+  transition: background var(--transition-ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Subtle background particles/blobs for extra flair - moved here for clarity */
+body::before, body::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(100px); /* Heavy blur for soft blobs */
+  z-index: -1;
+}
+
+body::before {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--primary), transparent);
+  top: -50px;
+  left: -50px;
+  animation: blob-move 15s infinite alternate ease-in-out;
+}
+
+body::after {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--accent), transparent);
+  bottom: -100px;
+  right: -100px;
+  animation: blob-move 20s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes blob-move {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, -30px) scale(1.05); }
+  50% { transform: translate(0, 20px) scale(0.95); }
+  75% { transform: translate(-30px, -10px) scale(1.1); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+code {
+  /* Keep a standard monospace font for code, but you could specify a more modern one if desired */
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  /* Add a subtle background and color to make code snippets stand out within the theme */
+  background-color: rgba(0, 255, 255, 0.05); /* Very light neon accent background */
+  color: var(--accent); /* Neon accent color for code text */
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.1); /* Subtle neon glow */
+}
